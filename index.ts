@@ -6,12 +6,19 @@ import { cachePokemonLearnsets } from "./src/cachePokemonLearnset/cachePokemonLe
 import { cachePokemonStats } from "./src/cachePokemonStats/cachePokemonStats";
 import { TYPES_LIST } from "./src/_data/types-list.data";
 import { getGenerationsTypeEfficiencies } from "./src/getGenerationsTypesEfficiencies/getGenerationsTypeEfficiencies";
-import { getCacheOrCalculte } from "./src/_utils/getCacheOrDownload/getCacheOrCalculte";
+import { getCacheOrCalculate } from "./src/_utils/getCacheOrDownload/getCacheOrCalculate";
 import { PBNNPokemon } from "./src/_types/PBNNPokemon";
+import { getRegionalPokedexPokemons } from "./src/getRegionalPokedexPokemons/getRegionalPokedexPokemons";
+import {
+  REGIONAL_POKEDEXES_DATA,
+  RegionalPokedexData,
+} from "./src/_data/regional-pokedexes.data";
+import { REGIONAL_POKEDEXES } from "./src/_enums/regional-pokedexes.enum";
 
 const REFRESH_POKEMONS_PBNN = false;
 const PROCESS_PURE_FORMS_POKEMONS_PBNN = false;
-const PROCESS_TYPES_EFFICIENCIES = true;
+const PROCESS_TYPES_EFFICIENCIES = false;
+const PROCESS_REGIONAL_POKEDEXES = true;
 
 async function run() {
   const pbnn = await getCacheOrDownload(
@@ -19,7 +26,7 @@ async function run() {
     "https://bulbapedia.bulbagarden.net/w/index.php?title=List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number&action=edit"
   );
 
-  const pokemonsPBNN = await getCacheOrCalculte<PBNNPokemon[]>(
+  const pokemonsPBNN = await getCacheOrCalculate<PBNNPokemon[]>(
     "./cache/refined/pokemons-pbnn.json",
     () => getPokemonsFromPBNN(pbnn),
     REFRESH_POKEMONS_PBNN
@@ -83,6 +90,12 @@ async function run() {
         clearInterval(interval);
       }
     }, 6000);
+  }
+
+  if (PROCESS_REGIONAL_POKEDEXES) {
+    const temp = await getRegionalPokedexPokemons(
+      REGIONAL_POKEDEXES_DATA[REGIONAL_POKEDEXES.KANTO] as RegionalPokedexData
+    );
   }
 }
 

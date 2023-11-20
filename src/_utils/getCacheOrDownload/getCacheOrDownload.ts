@@ -19,6 +19,7 @@ async function download(url: string): Promise<string> {
   });
 }
 
+/** Extracts `textarea`'s content from the page */
 export async function getCacheOrDownload(
   cachePath: string,
   url: string,

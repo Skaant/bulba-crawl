@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "fs/promises";
 
-export async function getCacheOrCalculte<T>(
+export async function getCacheOrCalculate<T>(
   cachePath: string,
   calculate: () => T,
   force = false

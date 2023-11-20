@@ -1,0 +1,23 @@
+{
+  "name": "bulba-crawl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tsc --build --watch",
+    "build": "npx tsc --build",
+    "test": "npx jest"
+  },
+  "author": "rimarok.com",
+  "license": "ISC",
+  "dependencies": {
+    "openai": "^4.19.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.23.3",
+    "@types/jest": "^29.5.8",
+    "esbuild": "0.19.5",
+    "node-fetch": "^3.3.2",
+    "ts-jest": "^29.1.1"
+  }
+}

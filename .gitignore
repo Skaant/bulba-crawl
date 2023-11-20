@@ -1,0 +1,4 @@
+**/*.js
+!jest.config.js
+cache
+node_modules

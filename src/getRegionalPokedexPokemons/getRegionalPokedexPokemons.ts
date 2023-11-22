@@ -13,14 +13,12 @@ export async function getRegionalPokedexPokemons({
   const pokedex = (await getCache(
     `./cache/refined/regional-pokedexes/${id}.json`
   )) as RegionalPokedexPokemon[] | undefined;
-  console.log(1);
   if (pokedex) return pokedex;
   const page = await getCacheOrDownload(
     `./cache/raw/regional-pokedexes/${id}.json`,
     url
   );
   const pokedexSection = getSection(page, section || "==List of Pokémon by");
-  console.log(2);
   if (!pokedexSection) return undefined;
   const pokemons = pokedexSection
     .filter((line) => line.startsWith("{{rdex|"))

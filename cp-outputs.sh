@@ -1,0 +1,1 @@
+cp -r ./cache/outputs/* ../poke-team/public

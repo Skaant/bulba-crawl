@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npm run dev",
     "dev": "npx tsc --build --watch",
     "build": "npx tsc --build",
     "test": "npx jest"

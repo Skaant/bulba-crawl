@@ -1,36 +1,41 @@
-import { getPokemonsFromPBNN } from "./src/getPokemonsFromPBNN/getPokemonsFromPBNN";
-import { getCacheOrDownload } from "./src/_utils/getCacheOrDownload/getCacheOrDownload";
 import { writeFile } from "fs/promises";
-import { getPokemonFromPage } from "./src/getPokemonFromPage/getPokemonFromPage";
-import { cachePokemonLearnsets } from "./src/cachePokemonLearnset/cachePokemonLearnsets";
-import { cachePokemonStats } from "./src/cachePokemonStats/cachePokemonStats";
-import { TYPES_LIST } from "./src/_data/types-list.data";
-import { getGenerationsTypeEfficiencies } from "./src/getGenerationsTypesEfficiencies/getGenerationsTypeEfficiencies";
-import { getCacheOrCalculate } from "./src/_utils/getCacheOrDownload/getCacheOrCalculate";
+import { ByGenerations } from "./src/_types/ByGenerations";
+import { TypeEfficiencies } from "./src/_types/TypeEfficiencies";
 import { PBNNPokemon } from "./src/_types/PBNNPokemon";
-import { getRegionalPokedexPokemons } from "./src/getRegionalPokedexPokemons/getRegionalPokedexPokemons";
+import { REGIONAL_POKEDEXES } from "./src/_enums/regional-pokedexes.enum";
 import {
   REGIONAL_POKEDEXES_DATA,
   RegionalPokedexData,
 } from "./src/_data/regional-pokedexes.data";
-import { REGIONAL_POKEDEXES } from "./src/_enums/regional-pokedexes.enum";
-import { TypeEfficiencies } from "./src/_types/TypeEfficiencies";
-import { ByGenerations } from "./src/_types/ByGenerations";
 import { GENERATIONS_LIST } from "./src/_data/generations-list.data";
-import { getEnhancedPokemon } from "./src/exports/exportRegionalPokedexes/getEnhancedPokemon/getEnhancedPokemon";
-import { PagePokemon } from "./src/_types/PagePokemon";
 import { GAMES_DATA } from "./src/_data/games.data";
+import { TYPES_LIST } from "./src/_data/types-list.data";
+import { getPokemonsFromPBNN } from "./src/getPokemonsFromPBNN/getPokemonsFromPBNN";
+import { getCacheOrDownload } from "./src/_utils/getCacheOrDownload/getCacheOrDownload";
+import { getGenerationsTypeEfficiencies } from "./src/getGenerationsTypesEfficiencies/getGenerationsTypeEfficiencies";
+import { getCacheOrCalculate } from "./src/_utils/getCacheOrDownload/getCacheOrCalculate";
+import { getRegionalPokedexPokemons } from "./src/getRegionalPokedexPokemons/getRegionalPokedexPokemons";
+import { getEnhancedPokemon } from "./src/exports/exportRegionalPokedexes/getEnhancedPokemon/getEnhancedPokemon";
+import {
+  processPokemon,
+  ProcessPokemonConfig,
+} from "./src/processPokemon/processPokemon";
 
+export type ProcessConfig = {
+  PROCESS_POKEMONS?: ProcessPokemonConfig;
+};
+
+const PROCESS_CONFIG: ProcessConfig = {
+  PROCESS_POKEMONS: {
+    PROCESS_STATS: true,
+    PROCESS_MOVES: true,
+  },
+};
+
+// Deprecated. Move to PROCESS_CONFIG
 const OUTPUT_GAMES_LIST = true;
-
 const REFRESH_POKEMONS_PBNN = false;
-
-const PROCESS_PURE_FORMS_POKEMONS_PBNN = false;
-const PROCESS_POKEMONS_STATS = false;
-const PROCESS_POKEMONS_LEARNSETS = true;
-
 const PROCESS_TYPES_EFFICIENCIES = false;
-
 const PROCESS_REGIONAL_POKEDEXES = false;
 
 async function run() {
@@ -52,7 +57,7 @@ async function run() {
     REFRESH_POKEMONS_PBNN
   );
 
-  if (PROCESS_PURE_FORMS_POKEMONS_PBNN) {
+  if (PROCESS_CONFIG.PROCESS_POKEMONS) {
     const pureFormPokemonsPBNN = pokemonsPBNN.filter(
       (pokemon, index) =>
         pokemon.ndex &&
@@ -63,23 +68,9 @@ async function run() {
     let index = 0;
     let interval = setInterval(async () => {
       const pokemonPBNN = pureFormPokemonsPBNN[index];
-      console.log(
-        `{${index}/${pokemonPBNN.ndex}} Ok, it's ${pokemonPBNN.name} !`
-      );
-      // Page crawling
-      const pokemonPage = await getCacheOrDownload(
-        `./cache/raw/pokemons/${pokemonPBNN.name}.json`,
-        `https://bulbapedia.bulbagarden.net/w/index.php?title=${pokemonPBNN.name}_(Pok%C3%A9mon)&action=edit`
-      );
-      const pagePokemon = await getCacheOrCalculate<PagePokemon>(
-        `./cache/refined/pokemons/${pokemonPBNN.name}.json`,
-        () => getPokemonFromPage(pokemonPBNN, pokemonPage)
-      );
-      // Base stats crawling
-      PROCESS_POKEMONS_STATS && cachePokemonStats(pokemonPage, pagePokemon);
-      // Learnsets crawling
-      PROCESS_POKEMONS_LEARNSETS &&
-        cachePokemonLearnsets(pokemonPage, pagePokemon);
+
+      processPokemon(pokemonPBNN, PROCESS_CONFIG.PROCESS_POKEMONS);
+
       // Interval incrementation
       index++;
       if (index === pureFormPokemonsPBNN.length) {

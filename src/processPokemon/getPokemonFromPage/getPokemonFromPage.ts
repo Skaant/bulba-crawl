@@ -1,8 +1,8 @@
-import { GENERATIONS_NUMBER_TO_ID } from "../_data/generationsNumberToId.data";
-import { LV100EXP_TO_LEVELING_RATE } from "../_data/lv100expToLevelingRate.data";
-import { STATS } from "../_enums/stats.enum";
-import { PBNNPokemon } from "../_types/PBNNPokemon";
-import { PagePokemon, PagePokemonForm } from "../_types/PagePokemon";
+import { GENERATIONS_NUMBER_TO_ID } from "../../_data/generationsNumberToId.data";
+import { LV100EXP_TO_LEVELING_RATE } from "../../_data/lv100expToLevelingRate.data";
+import { STATS } from "../../_enums/stats.enum";
+import { PBNNPokemon } from "../../_types/PBNNPokemon";
+import { PagePokemon, PagePokemonForm } from "../../_types/PagePokemon";
 
 export function getPokemonFromPage(
   { form, ...pokemonPBNN }: PBNNPokemon,

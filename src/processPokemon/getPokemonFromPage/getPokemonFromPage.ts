@@ -5,7 +5,7 @@ import { PBNNPokemon } from "../../_types/PBNNPokemon";
 import { PagePokemon, PagePokemonForm } from "../../_types/PagePokemon";
 
 export function getPokemonFromPage(
-  { form, ...pokemonPBNN }: PBNNPokemon,
+  { formId, ...pokemonPBNN }: PBNNPokemon,
   page: string[]
 ): PagePokemon {
   const infoboxStartIndex = page.findIndex((line) =>

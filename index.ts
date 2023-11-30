@@ -22,24 +22,25 @@ import {
 } from "./src/processPokemon/processPokemon";
 
 export type ProcessConfig = {
+  PROCESS_GAMES?: true;
+  REFRESH_POKEMONS_PBNN_REFINEMENT?: true;
   PROCESS_POKEMONS?: ProcessPokemonConfig;
 };
 
 const PROCESS_CONFIG: ProcessConfig = {
-  PROCESS_POKEMONS: {
+  REFRESH_POKEMONS_PBNN_REFINEMENT: true,
+  PROCESS_POKEMONS: undefined && {
     PROCESS_STATS: true,
     PROCESS_MOVES: true,
   },
 };
 
 // Deprecated. Move to PROCESS_CONFIG
-const OUTPUT_GAMES_LIST = true;
-const REFRESH_POKEMONS_PBNN = false;
 const PROCESS_TYPES_EFFICIENCIES = false;
 const PROCESS_REGIONAL_POKEDEXES = false;
 
 async function run() {
-  if (OUTPUT_GAMES_LIST) {
+  if (PROCESS_CONFIG.PROCESS_GAMES) {
     await writeFile(
       "./cache/outputs/games.json",
       JSON.stringify(GAMES_DATA, undefined, 2)
@@ -54,14 +55,14 @@ async function run() {
   const pokemonsPBNN = await getCacheOrCalculate<PBNNPokemon[]>(
     "./cache/refined/pokemons-pbnn.json",
     () => getPokemonsFromPBNN(pbnn),
-    REFRESH_POKEMONS_PBNN
+    PROCESS_CONFIG.REFRESH_POKEMONS_PBNN_REFINEMENT
   );
 
   if (PROCESS_CONFIG.PROCESS_POKEMONS) {
     const pureFormPokemonsPBNN = pokemonsPBNN.filter(
       (pokemon, index) =>
         pokemon.ndex &&
-        (pokemon.form === undefined ||
+        (pokemon.formName === undefined ||
           pokemonsPBNN[index - 1]?.ndex !== pokemon.ndex)
     );
 

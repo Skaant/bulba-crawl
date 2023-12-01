@@ -8,8 +8,9 @@ import { getTypeEfficienciesFromSection } from "./getTypeEfficienciesFromSection
 export function getGenerationsTypeEfficiencies(
   typePage: string[]
 ): ByGenerations<TypeEfficiencies> | undefined {
-  const SECTION = "==Battle properties";
-  const sections = getGenerationsSection(typePage, SECTION);
+  const section = getSection(typePage, "==Battle properties");
+  if (!section) throw new Error("No battle properties section");
+  const sections = getGenerationsSection(section, 2);
   if (sections) {
     return Object.entries(sections).reduce(
       (generations, [generationId, section]) => {
@@ -21,8 +22,6 @@ export function getGenerationsTypeEfficiencies(
       {} as Partial<ByGenerations<TypeEfficiencies>>
     ) as ByGenerations<TypeEfficiencies>;
   } else {
-    const section = getSection(typePage, SECTION);
-    if (!section) return undefined;
     const typesEfficiciency: TypeEfficiencies =
       getTypeEfficienciesFromSection(section);
     return [...Array(9)].reduce((generations, _, index) => {

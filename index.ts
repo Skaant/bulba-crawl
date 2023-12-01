@@ -28,10 +28,9 @@ export type ProcessConfig = {
 };
 
 const PROCESS_CONFIG: ProcessConfig = {
-  REFRESH_POKEMONS_PBNN_REFINEMENT: true,
-  PROCESS_POKEMONS: undefined && {
+  PROCESS_POKEMONS: {
+    REFRESH_POKEMON_FROM_PAGE: true,
     PROCESS_STATS: true,
-    PROCESS_MOVES: true,
   },
 };
 
@@ -86,7 +85,7 @@ async function run() {
       ByGenerations<TypeEfficiencies>
     > = {};
 
-    const INTERVAL_DELAY = 100;
+    const INTERVAL_DELAY = 10000;
     let index = 0;
     let interval = setInterval(async () => {
       const type = TYPES_LIST[index];

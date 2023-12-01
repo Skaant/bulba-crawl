@@ -1,35 +1,21 @@
-import { GENERATIONS_NUMBER_TO_ID } from "../../_data/generationsNumberToId.data";
 import { LV100EXP_TO_LEVELING_RATE } from "../../_data/lv100expToLevelingRate.data";
 import { STATS } from "../../_enums/stats.enum";
 import { PBNNPokemon } from "../../_types/PBNNPokemon";
 import { PagePokemon, PagePokemonForm } from "../../_types/PagePokemon";
+import { getObject } from "../../_utils/_lines-manipulation/getObject";
 
 export function getPokemonFromPage(
   { formId, ...pokemonPBNN }: PBNNPokemon,
   page: string[]
 ): PagePokemon {
-  const infoboxStartIndex = page.findIndex((line) =>
-    line.includes("{{Pokémon Infobox")
-  );
-  const infoboxEndIndex = page
-    .slice(infoboxStartIndex)
-    .findIndex(
-      (line, index) => index > infoboxStartIndex && line.includes("}}")
-    );
-  const infobox = page
-    .slice(infoboxStartIndex + 1, infoboxEndIndex + infoboxStartIndex)
-    .reduce((acc, line) => {
-      const [key, value] = line.slice(1).split("=");
-      acc[key] = value;
-      return acc;
-    }, {} as Record<string, string>);
-
+  const infobox = getObject(page, "Pokémon Infobox");
+  if (!infobox) throw new Error("No infobox");
   const nbFormes = infobox["forme"] && parseInt(infobox["forme"]);
   const firstFormNumber = infobox["form1"] ? 1 : 2;
 
   return {
     ...pokemonPBNN,
-    firstGeneration: GENERATIONS_NUMBER_TO_ID[infobox["generation"]],
+    firstGeneration: parseInt(infobox["generation"]),
     forms: nbFormes
       ? [...Array(nbFormes + 1 - firstFormNumber).keys()].map((_, index) => {
           return {

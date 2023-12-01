@@ -18,7 +18,9 @@ export function getObject(
   );
   objectLines.push(lines[startIndex + endIndex].slice(0, -2));
   return objectLines.reduce((acc, line) => {
-    const [key, value] = line.slice(1).split("=");
+    const [key, value] = line
+      .slice(line.startsWith("|") ? 1 : 0, line.endsWith("|") ? -1 : undefined)
+      .split("=");
     acc[key] = value;
     return acc;
   }, {} as Record<string, string>);

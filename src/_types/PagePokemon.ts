@@ -9,7 +9,7 @@ export type PagePokemonForm = {
 };
 
 export type PagePokemon = Omit<PBNNPokemon, "form"> & {
-  firstGeneration: string;
+  firstGeneration: number;
   forms?: PagePokemonForm[];
   abilities: string[];
   hiddenAbility?: string;

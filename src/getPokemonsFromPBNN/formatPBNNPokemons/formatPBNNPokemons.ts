@@ -10,6 +10,7 @@ function getTypes(values: string[], index: number): Types {
 export function formatPBNNPokemons(line: string, index?: number): PBNNPokemon {
   let values = line.slice(2, line.indexOf("}}")).split("|");
   console.log(`== Formating #${values[1]} ${values[2]} (${index}) ==`);
+
   const isFormLine = values[0].startsWith("ndex/form");
   const isInitialForm = values[3].startsWith("iform=");
   const formId = isFormLine
@@ -20,6 +21,13 @@ export function formatPBNNPokemons(line: string, index?: number): PBNNPokemon {
     : formId
     ? isInitialForm && values[4].split("=")[1]
     : values[3].split("=")[1];
+  (formId || formName) &&
+    console.log(
+      `  > Forms : ${formName ? `${formName}` : ""}${
+        formId && formName ? " " : ""
+      }${formId ? `(${formId})` : ""}`
+    );
+
   let types = getTypes(
     values,
     formId
@@ -34,13 +42,8 @@ export function formatPBNNPokemons(line: string, index?: number): PBNNPokemon {
       : // No form
         3
   );
-  (formId || formName) &&
-    console.log(
-      `  > Forms : ${formName ? `${formName}` : ""}${
-        formId && formName ? " " : ""
-      }${formId ? `(${formId})` : ""}`
-    );
   console.log(`  > Types : ${types.join(", ")}`);
+
   return {
     ndex: parseInt(values[1]),
     name: values[2],

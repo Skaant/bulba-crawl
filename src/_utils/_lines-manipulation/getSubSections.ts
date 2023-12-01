@@ -2,17 +2,13 @@ import { getSection } from "./getSection";
 
 export function getSubSections(
   lines: string[],
-  /** Do not put ending "===". */
-  section: string
+  parentSectionLevel: number
 ): { name: string; lines: string[] }[] | undefined {
-  const sectionLines = getSection(lines, section);
-  if (sectionLines === undefined) return undefined;
-  const sectionLevel = section.split("=").length - 1;
-  const subSections: { name: string; lines: string[] }[] = sectionLines
-    .filter((line) => line.startsWith("".padEnd(sectionLevel + 1, "=")))
+  const subSections: { name: string; lines: string[] }[] = lines
+    .filter((line) => line.startsWith("".padEnd(parentSectionLevel + 1, "=")))
     .map((line) => ({
-      name: line.slice(sectionLevel + 1),
-      lines: getSection(sectionLines, line) ?? [],
+      name: line.slice(parentSectionLevel + 1),
+      lines: getSection(lines, line) ?? [],
     }));
   return subSections.length ? subSections : undefined;
 }

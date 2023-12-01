@@ -1,9 +1,11 @@
-import { STATS } from "../../_enums/stats.enum";
-import { Stats } from "../../_types/Stats";
+import { STATS } from "../../../_enums/stats.enum";
+import { Stats } from "../../../_types/Stats";
+import { getObject } from "../../../_utils/_lines-manipulation/getObject";
 
-export function getStatsFromBaseStatsObject(
-  object: Record<string, string>
-): Stats {
+export function getStatsFromSection(section: string[]): Stats | undefined {
+  const object = getObject(section);
+  if (!object) return undefined;
+  console.log(object);
   if (
     !object["HP"] ||
     !object["Attack"] ||

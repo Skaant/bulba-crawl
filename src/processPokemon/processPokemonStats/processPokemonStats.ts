@@ -40,7 +40,6 @@ export async function processPokemonStats(
     "Version"
   )?.pop()?.lines;
   if (versionsSectionCase) statsSection = versionsSectionCase;
-  console.log(versionsSectionCase);
 
   const baseFormSection =
     pokemon.forms &&

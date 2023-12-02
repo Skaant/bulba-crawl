@@ -12,7 +12,7 @@ export function getObject(
     return (
       (line.endsWith("}}") &&
         (!_lines[startIndex + index + 1] ||
-          _lines[startIndex + index + 1] === "")) ||
+          _lines[startIndex + index + 1] !== "|")) ||
       line === "}}"
     );
   });

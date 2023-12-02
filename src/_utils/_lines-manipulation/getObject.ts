@@ -8,7 +8,9 @@ export function getObject(
   if (startIndex === -1) return undefined;
   const endIndex = lines.slice(startIndex).findIndex((line, index) => {
     return (
-      (line.endsWith("}}") && lines[startIndex + index + 1] === "") ||
+      (line.endsWith("}}") &&
+        (!lines[startIndex + index + 1] ||
+          lines[startIndex + index + 1] === "")) ||
       line === "}}"
     );
   });

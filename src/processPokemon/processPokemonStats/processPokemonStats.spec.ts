@@ -388,5 +388,43 @@ describe("processPokemonStats", () => {
         });
       }
     });
+    test("Stats section end section (#0901 Ursaluna)", async () => {
+      const raw = await getCache<string[]>(
+        "./cache/raw/pokemons/Ursaluna.json"
+      );
+      if (!raw) throw new Error("No page");
+      const refined = await getCache<PagePokemon>(
+        "./cache/refined/pokemons/Ursaluna.json"
+      );
+      if (!refined) throw new Error("No page pokemon object");
+      const stats = await processPokemonStats(raw, refined);
+      expect(stats.type).toBe("forms");
+      if (stats.type === "forms") {
+        expect(stats.forms["Ursaluna"]["Generation VIII"]).toEqual({
+          [STATS.HP]: 130,
+          [STATS.ATTACK]: 140,
+          [STATS.DEFENSE]: 105,
+          [STATS.SP_ATTACK]: 45,
+          [STATS.SP_DEFENSE]: 80,
+          [STATS.SPEED]: 50,
+        });
+        expect(stats.forms["Ursaluna"]["Generation IX"]).toEqual({
+          [STATS.HP]: 130,
+          [STATS.ATTACK]: 140,
+          [STATS.DEFENSE]: 105,
+          [STATS.SP_ATTACK]: 45,
+          [STATS.SP_DEFENSE]: 80,
+          [STATS.SPEED]: 50,
+        });
+        expect(stats.forms["Bloodmoon Ursaluna"]["Generation IX"]).toEqual({
+          [STATS.HP]: 113,
+          [STATS.ATTACK]: 70,
+          [STATS.DEFENSE]: 120,
+          [STATS.SP_ATTACK]: 135,
+          [STATS.SP_DEFENSE]: 65,
+          [STATS.SPEED]: 52,
+        });
+      }
+    });
   });
 });

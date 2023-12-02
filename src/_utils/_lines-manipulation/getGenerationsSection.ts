@@ -9,7 +9,11 @@ export function getGenerationsSection<T = string[]>(
   firstGeneration: number = 1,
   transform?: (lines: string[]) => T
 ): ByGenerations<T> {
-  const generationsBlocks = getSubSections(lines, currentSectionLevel);
+  const generationsBlocks = getSubSections(
+    lines,
+    currentSectionLevel,
+    "Generation"
+  );
   // No generations case
   if (!generationsBlocks) {
     const generations: ByGenerations<T> = {};

@@ -319,7 +319,7 @@ describe("processPokemonStats", () => {
         });
       }
     });
-    test.only("??? Natu", async () => {
+    test("|-ending object (#0177 Natu)", async () => {
       const raw = await getCache<string[]>("./cache/raw/pokemons/Natu.json");
       if (!raw) throw new Error("No page");
       const refined = await getCache<PagePokemon>(
@@ -332,6 +332,61 @@ describe("processPokemonStats", () => {
         forms: refined.forms,
         formName: refined.formName,
       });
+      expect(stats.type).toBe("no-form");
+      if (stats.type === "no-form") {
+        expect(stats.noForm["Generation II"]).toEqual({
+          [STATS.HP]: 40,
+          [STATS.ATTACK]: 50,
+          [STATS.DEFENSE]: 45,
+          [STATS.SP_ATTACK]: 70,
+          [STATS.SP_DEFENSE]: 45,
+          [STATS.SPEED]: 70,
+        });
+        expect(stats.noForm["Generation IX"]).toEqual({
+          [STATS.HP]: 40,
+          [STATS.ATTACK]: 50,
+          [STATS.DEFENSE]: 45,
+          [STATS.SP_ATTACK]: 70,
+          [STATS.SP_DEFENSE]: 45,
+          [STATS.SPEED]: 70,
+        });
+      }
+    });
+    test("Alternative form level 5 instead of 4 (#0382 Kyogre)", async () => {
+      const raw = await getCache<string[]>("./cache/raw/pokemons/Kyogre.json");
+      if (!raw) throw new Error("No page");
+      const refined = await getCache<PagePokemon>(
+        "./cache/refined/pokemons/Kyogre.json"
+      );
+      if (!refined) throw new Error("No page pokemon object");
+      const stats = await processPokemonStats(raw, refined);
+      expect(stats.type).toBe("forms");
+      if (stats.type === "forms") {
+        expect(stats.forms["Kyogre"]["Generation III"]).toEqual({
+          [STATS.HP]: 100,
+          [STATS.ATTACK]: 100,
+          [STATS.DEFENSE]: 90,
+          [STATS.SP_ATTACK]: 150,
+          [STATS.SP_DEFENSE]: 140,
+          [STATS.SPEED]: 90,
+        });
+        expect(stats.forms["Kyogre"]["Generation IX"]).toEqual({
+          [STATS.HP]: 100,
+          [STATS.ATTACK]: 100,
+          [STATS.DEFENSE]: 90,
+          [STATS.SP_ATTACK]: 150,
+          [STATS.SP_DEFENSE]: 140,
+          [STATS.SPEED]: 90,
+        });
+        expect(stats.forms["Primal Kyogre"]["Generation IX"]).toEqual({
+          [STATS.HP]: 100,
+          [STATS.ATTACK]: 150,
+          [STATS.DEFENSE]: 90,
+          [STATS.SP_ATTACK]: 180,
+          [STATS.SP_DEFENSE]: 160,
+          [STATS.SPEED]: 90,
+        });
+      }
     });
   });
 });

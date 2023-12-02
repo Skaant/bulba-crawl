@@ -5,7 +5,6 @@ import { getObject } from "../../../_utils/_lines-manipulation/getObject";
 export function getStatsFromSection(section: string[]): Stats | undefined {
   const object = getObject(section);
   if (!object) return undefined;
-  console.log(object);
   if (
     !object["HP"] ||
     !object["Attack"] ||

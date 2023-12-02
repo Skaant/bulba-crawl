@@ -24,8 +24,9 @@ export async function processPokemonStats(
   let statsSection =
     getSection(page, "====Base stats") || getSection(page, "====Base Stats");
 
+  // Fix for pages with stats section level 3 instead of 4
   const statsSectionLevel3Case = !statsSection
-    ? getSection(page, "===Base stats")
+    ? getSection(page, "===Base stats") || getSection(page, "===Stats")
     : undefined;
   if (statsSectionLevel3Case) statsSection = statsSectionLevel3Case;
 
@@ -44,7 +45,6 @@ export async function processPokemonStats(
         statsSection,
         statsSectionLevel3Case ? `====${pokemon.name}` : `=====${pokemon.name}`
       ));
-
   const baseFormStats = getGenerationsSection(
     baseFormSection || statsSection,
     (baseFormSection ? 5 : 4) - (statsSectionLevel3Case ? 1 : 0),
@@ -72,10 +72,14 @@ export async function processPokemonStats(
       const formName = form.name.includes(pokemon.name)
         ? form.name
         : `${pokemon.name} (${form.name})`;
-      const formSection = getSection(
+      let formSection = getSection(
         statsSection,
         statsSectionLevel3Case ? `====${form.name}` : `=====${form.name}`
       );
+      // Fix Kyogre (forms is lvl 5 instead of 4)
+      if (statsSectionLevel3Case && !formSection) {
+        formSection = getSection(statsSection, `=====${form.name}`);
+      }
       if (formSection) {
         let formStats = getGenerationsSection(
           formSection,

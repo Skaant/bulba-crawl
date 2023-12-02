@@ -426,5 +426,27 @@ describe("processPokemonStats", () => {
         });
       }
     });
+    test("No generation but versions section (#1002 Wo-Chien)", async () => {
+      const raw = await getCache<string[]>(
+        "./cache/raw/pokemons/Wo-Chien.json"
+      );
+      if (!raw) throw new Error("No page");
+      const refined = await getCache<PagePokemon>(
+        "./cache/refined/pokemons/Wo-Chien.json"
+      );
+      if (!refined) throw new Error("No page pokemon object");
+      const stats = await processPokemonStats(raw, refined);
+      expect(stats.type).toBe("no-form");
+      if (stats.type === "no-form") {
+        expect(stats.noForm["Generation IX"]).toEqual({
+          [STATS.HP]: 85,
+          [STATS.ATTACK]: 85,
+          [STATS.DEFENSE]: 100,
+          [STATS.SP_ATTACK]: 95,
+          [STATS.SP_DEFENSE]: 135,
+          [STATS.SPEED]: 70,
+        });
+      }
+    });
   });
 });

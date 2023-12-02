@@ -5,6 +5,7 @@ import { getStatsFromSection } from "./getStatsFromSection/getStatsFromSection";
 import { getGenerationsSection } from "../../_utils/_lines-manipulation/getGenerationsSection";
 import { ByGenerations } from "../../_types/ByGenerations";
 import { Stats } from "../../_types/Stats";
+import { getSubSections } from "../../_utils/_lines-manipulation/getSubSections";
 
 type ProcessPokemonStatsReturn =
   | {
@@ -31,6 +32,18 @@ export async function processPokemonStats(
   if (statsSectionLevel3Case) statsSection = statsSectionLevel3Case;
 
   if (!statsSection) throw new Error("No stats section");
+
+  const versionsSectionCase = getSubSections(
+    statsSection,
+    statsSectionLevel3Case ? 3 : 4,
+    "Version"
+  )
+    ?.pop()
+    ?.lines[0].split("|")
+    .join("\n|")
+    .split("\n");
+  if (versionsSectionCase) statsSection = versionsSectionCase;
+  console.log(versionsSectionCase);
 
   const baseFormSection =
     pokemon.forms &&

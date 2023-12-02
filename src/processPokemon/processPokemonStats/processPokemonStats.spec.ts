@@ -448,5 +448,28 @@ describe("processPokemonStats", () => {
         });
       }
     });
+    // Integration `getObject` single line case
+    test("Single line stats (#1007 Koraidon)", async () => {
+      const raw = await getCache<string[]>(
+        "./cache/raw/pokemons/Koraidon.json"
+      );
+      if (!raw) throw new Error("No page");
+      const refined = await getCache<PagePokemon>(
+        "./cache/refined/pokemons/Koraidon.json"
+      );
+      if (!refined) throw new Error("No page pokemon object");
+      const stats = await processPokemonStats(raw, refined);
+      expect(stats.type).toBe("no-form");
+      if (stats.type === "no-form") {
+        expect(stats.noForm["Generation IX"]).toEqual({
+          [STATS.HP]: 100,
+          [STATS.ATTACK]: 135,
+          [STATS.DEFENSE]: 115,
+          [STATS.SP_ATTACK]: 85,
+          [STATS.SP_DEFENSE]: 100,
+          [STATS.SPEED]: 135,
+        });
+      }
+    });
   });
 });

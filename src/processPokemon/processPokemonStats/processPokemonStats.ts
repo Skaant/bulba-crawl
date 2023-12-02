@@ -33,15 +33,12 @@ export async function processPokemonStats(
 
   if (!statsSection) throw new Error("No stats section");
 
+  // Fix for pages with stats in version sections
   const versionsSectionCase = getSubSections(
     statsSection,
     statsSectionLevel3Case ? 3 : 4,
     "Version"
-  )
-    ?.pop()
-    ?.lines[0].split("|")
-    .join("\n|")
-    .split("\n");
+  )?.pop()?.lines;
   if (versionsSectionCase) statsSection = versionsSectionCase;
   console.log(versionsSectionCase);
 

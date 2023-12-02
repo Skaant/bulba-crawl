@@ -2,23 +2,25 @@ export function getObject(
   lines: string[],
   label?: string
 ): Record<string, string> | undefined {
-  const startIndex = lines.findIndex((line) =>
+  const _lines =
+    lines.length === 1 ? lines?.[0].split("|").join("\n|").split("\n") : lines;
+  const startIndex = _lines.findIndex((line) =>
     line.startsWith(label ? `{{${label}` : "{{")
   );
   if (startIndex === -1) return undefined;
-  const endIndex = lines.slice(startIndex).findIndex((line, index) => {
+  const endIndex = _lines.slice(startIndex).findIndex((line, index) => {
     return (
       (line.endsWith("}}") &&
-        (!lines[startIndex + index + 1] ||
-          lines[startIndex + index + 1] === "")) ||
+        (!_lines[startIndex + index + 1] ||
+          _lines[startIndex + index + 1] === "")) ||
       line === "}}"
     );
   });
-  const objectLines = lines.slice(
+  const objectLines = _lines.slice(
     startIndex + 1,
     endIndex === -1 ? undefined : startIndex + endIndex
   );
-  objectLines.push(lines[startIndex + endIndex].slice(0, -2));
+  objectLines.push(_lines[startIndex + endIndex].slice(0, -2));
   return objectLines.reduce((acc, line) => {
     const [key, value] = line
       .slice(line.startsWith("|") ? 1 : 0, line.endsWith("|") ? -1 : undefined)

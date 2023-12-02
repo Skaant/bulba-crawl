@@ -12,8 +12,12 @@ export function getSection(
       (line) =>
         line.startsWith("=") && (line.split("=").length - 1) / 2 <= sectionLevel
     );
-  return lines.slice(
-    sectionStartIndex + 1,
-    sectionEndIndex === -1 ? undefined : sectionStartIndex + sectionEndIndex + 1
-  );
+  return lines
+    .slice(
+      sectionStartIndex + 1,
+      sectionEndIndex === -1
+        ? undefined
+        : sectionStartIndex + sectionEndIndex + 1
+    )
+    .filter((line) => line !== "");
 }
